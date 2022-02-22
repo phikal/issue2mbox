@@ -43,6 +43,9 @@ def removetarget(target):
 
 def get_mailbox(target, issue_number, args):
     """Mailbox or mbox?"""
+    if args.single:
+        return mailbox.mbox(f"{target}/all.mbox")
+
     if args.mailboxtype == "mbox":
         targetfile = f"{target}/{issue_number}.mbox"
         if args.overwrite is True:
@@ -120,6 +123,9 @@ def main():
         "-d", "--dest", type=str, help="Destination directory", required=False
     )
     parser.add_argument(
+        "-1", "--single", help="create a single archive", required=False, action="store_true",
+    )
+    parser.add_argument(
         "-o",
         "--overwrite",
         help="Overwrite files in destination.",
@@ -160,8 +166,11 @@ def main():
     else:
         homedir = os.path.expanduser("~")
         if not homedir:
-            homedir = "/tmp/"
-        target = f"/{homedir}/{repo.name}"
+            homedir = "/tmp/{repo.name}"
+        target = f"./{repo.name}"
+
+    if args.overwrite is True:
+        removetarget(f"{target}/all.mbox")
 
     issues = repo.get_issues(state="all")
 
