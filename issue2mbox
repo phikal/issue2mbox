@@ -84,7 +84,7 @@ def export(target, issues, project_owner, args):
             for comment in comments:
                 cmail = EmailMessage()
                 cmail["Subject"] = f"Re: {issue.title}"
-                cmail["From"] = f"{comment.user.login} <{comment.user.email}>"
+                cmail["From"] = f"{comment.user.name} <{comment.user.email}>"
                 cmail["To"] = mailto
                 cmail["Date"] = comment.created_at
                 cmail.add_header("Message-ID", f"{comment.id}")
